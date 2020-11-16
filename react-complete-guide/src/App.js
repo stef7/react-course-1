@@ -5,35 +5,43 @@ import Person from './Person/Person';
 class App extends Component {
   state = {
     persons: [
-      { name: 'Max', age: 28 },
-      { name: 'Manu', age: 29, hobbies: [
+      { id: 1, name: 'Max', age: 28 },
+      { id: 2, name: 'Manu', age: 29, hobbies: [
         'Racing'
       ] },
-      { name: 'Stephanie', age: 26 },
+      { id: 3, name: 'Stephanie', age: 26 },
     ],
+    showPersons: false
   };
 
-  switchNameHandler = (newName) => {
+  deletePersonHandler = (personIndex) => {
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({ persons });
+  };
+  
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
     this.setState({
-      persons: [
-        { name: newName, age: 27 },
-        { name: 'Manu', age: 29, hobbies: [
-          'Racing'
-        ] },
-        { name: 'Stephanie', age: 26 },
-      ]
+      showPersons: !doesShow
     });
-  };
+  }
 
-  nameChangedHandler = event => {
+  nameChangedHandler = (event, personId) => {
+    const persons = [...this.state.persons];
+
+    const personIndex = persons.findIndex(person => person.id === personId);
+
+    const person = {
+      ...persons[personIndex]
+    };
+
+    person.name = event.target.value;
+
+    persons[personIndex] = person;
+
     this.setState({
-      persons: [
-        { name: 'Max', age: 27 },
-        { name: event.target.value, age: 29, hobbies: [
-          'Racing'
-        ] },
-        { name: 'Stephanie', age: 26 },
-      ]
+      persons
     });
   };
 
@@ -46,31 +54,39 @@ class App extends Component {
       cursor: 'pointer'
     };
 
+    let persons = null;
+
+    if (this.state.showPersons) {
+      persons = this.state.persons.map((person, personIndex) => (
+        <Person
+          key={person.id}
+          name={person.name}
+          age={person.age}
+          deleteHandler={() => this.deletePersonHandler(personIndex)}
+          changed={event => this.nameChangedHandler(event, person.id)}
+         >
+          {person.hobbies && (
+            <React.Fragment>
+              My hobbies: {person.hobbies.join(', ')}
+            </React.Fragment>
+          )}
+        </Person>
+      ));
+    }
+
     return (
       <div className="App">
         <h1>Hi, I'm a React App</h1>
         <p>This is really working!</p>
 
-        <button onClick={
-          () => this.switchNameHandler('Maximilian!!')
-        }
-        style={style}
-        >Switch name</button>
+        <button
+          onClick={this.togglePersonsHandler}
+          style={style}
+        >
+          Show/hide persons
+        </button>
 
-        {this.state.persons.map(person => (
-          <Person
-            name={person.name}
-            age={person.age}
-            click={() => this.switchNameHandler('Max!')}
-            changed={this.nameChangedHandler}
-           >
-            {person.hobbies && (
-              <React.Fragment>
-                My hobbies: {person.hobbies.join(', ')}
-              </React.Fragment>
-            )}
-          </Person>
-        ))}
+        {persons}
       </div>
     );
   };

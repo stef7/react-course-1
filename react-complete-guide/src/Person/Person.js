@@ -3,16 +3,23 @@ import './Person.css';
 
 const person = (props) => {
   return (
-    <div className="Person" onClick={props.click}>
+    <div className="Person">
       <p>
         I'm {props.name} and I am {props.age} years old!
+        <span
+          onClick={props.deleteHandler}
+        > Delete</span>
       </p>
       {props.children && (
         <p>
           {props.children}
         </p>
       )}
-      <input type="text=" onChange={props.changed} value={props.name} />
+      <input
+        type="text"
+        onChange={props.changed}
+        value={props.name}
+      />
     </div>
   )
 };
