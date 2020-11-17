@@ -1,7 +1,20 @@
 import React, { Component } from "react";
 import "./App.css";
 import Person from './Person/Person';
-import Radium, { StyleRoot } from 'radium';
+import styled from 'styled-components';
+
+const StyledButton = styled.button`
+  background-color: ${props => props.showP ? 'red' : 'green'};
+  color: white;
+  font: inherit;
+  border: 0.1em solid blue;
+  border-radius: 0.2em;
+  cursor: pointer;
+  &:hover {
+    background-color: ${props => props.showP ? 'salmon' : 'lightgreen'};
+    color: black;
+  }
+`;
 
 class App extends Component {
   state = {
@@ -47,19 +60,6 @@ class App extends Component {
   };
 
   render() {
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      font: 'inherit',
-      border: '0.1em solid blue',
-      borderRadius: '0.2em',
-      cursor: 'pointer',
-      ':hover': {
-        backgroundColor: 'lightgreen',
-        color: 'black',
-      }
-    };
-
     let persons = null;
 
     if (this.state.showPersons) {
@@ -78,12 +78,6 @@ class App extends Component {
           )}
         </Person>
       ));
-
-      style.backgroundColor = 'red';
-      style[':hover'] = {
-        backgroundColor: 'salmon',
-        color: 'black',
-      }
     }
 
     const classes = [];
@@ -95,25 +89,23 @@ class App extends Component {
     }
 
     return (
-      <StyleRoot>
-        <div className="App">
-          <h1>Hi, I'm a React App</h1>
-          <p
-            className={classes.join(' ')}
-          >This is really working!</p>
+      <div className="App">
+        <h1>Hi, I'm a React App</h1>
+        <p
+          className={classes.join(' ')}
+        >This is really working!</p>
 
-          <button
-            onClick={this.togglePersonsHandler}
-            style={style}
-          >
-            Show/hide persons
-          </button>
+        <StyledButton
+          showP={this.state.showPersons}
+          onClick={this.togglePersonsHandler}
+        >
+          Show/hide persons
+        </StyledButton>
 
-          {persons}
-        </div>
-      </StyleRoot>
+        {persons}
+      </div>
     );
   };
 }
 
-export default Radium(App);
+export default App;

@@ -1,16 +1,21 @@
 import React from 'react';
-import './Person.css';
-import Radium from 'radium';
+import styled from 'styled-components';
+
+const StyledDiv = styled.div`
+  width: 60%;
+  margin: 1em auto;
+  border: 2px solid #ccc;
+  border-radius: 0.4em;
+  box-shadow: 0 0.2em 0.3em #ddd;
+  padding: 1em;
+  @media (min-width: 500px) {
+    background: lightyellow;
+  }
+`;
 
 const person = (props) => {
-  const style = {
-    '@media (min-width: 500px)': {
-      width: '480px',
-    }
-  };
-
   return (
-    <div className="Person" style={style}>
+    <StyledDiv>
       <p>
         I'm {props.name} and I am {props.age} years old!
         <span
@@ -27,8 +32,8 @@ const person = (props) => {
         onChange={props.changed}
         value={props.name}
       />
-    </div>
+    </StyledDiv>
   )
 };
 
-export default Radium(person);
+export default person;
